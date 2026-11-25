@@ -46,7 +46,7 @@ h1 em{font-family:'Instrument Serif';font-style:italic;font-weight:400;font-size
     <div class="hand">↓ the window that matters</div>
     <div class="line"></div>
     <div class="pts">
-      <div class="pt"><div class="dot">🤰</div><b>Pregnancy</b><span>Cash, specialised food & counselling</span></div>
+      <div class="pt"><div class="dot">🤰</div><b>Pregnancy</b><span>Mother joins the programme</span></div>
       <div class="pt"><div class="dot">👶</div><b>Birth</b><span>Facility visits continue</span></div>
       <div class="pt hit"><div class="dot">✓</div><b>6 months</b><span>Stunting 22% lower</span></div>
       <div class="pt"><div class="dot">🎂</div><b>2 years</b><span>End of the first 1,000 days</span></div>
