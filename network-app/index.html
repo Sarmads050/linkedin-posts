@@ -32,6 +32,7 @@
 <main id="main">
   <!-- TODAY -->
   <section class="view" id="view-today" aria-labelledby="viewTitle">
+   <div class="col-left">
     <div class="banner" id="fridayBanner" hidden>
       <b>Friday safai:</b> My Network → Manage → Sent mein ja kar 3 hafte purani pending requests "Withdraw" kar dein.
     </div>
@@ -57,11 +58,15 @@
         </div>
       </div>
     </div>
+   </div>
 
+   <div class="col-right">
     <div class="section-head"><h2>Aaj ki 4 searches</h2><label class="toggle"><input type="checkbox" id="only2nd"> Sirf 2nd-degree</label></div>
     <ol class="tasks" id="tasks"></ol>
+   </div>
 
-    <details class="card howto">
+   <div class="col-left col-left-2">
+    <details class="card howto" id="howto">
       <summary>Kaise karein? (1 minute)</summary>
       <ol>
         <li><b>LinkedIn kholein</b> dabayein. Search LinkedIn app mein khulegi.</li>
@@ -70,6 +75,7 @@
         <li>Wapas aa kar us card par <b>+1</b> dabayein.</li>
       </ol>
     </details>
+   </div>
   </section>
 
   <!-- NOTES -->
@@ -137,6 +143,7 @@
 </main>
 
 <nav class="tabbar" aria-label="App sections">
+  <div class="brand"><img src="icons/icon-192.png" alt="" width="36" height="36"><div><b>Network Daily</b><span>LinkedIn networking plan</span></div></div>
   <button type="button" class="tab active" data-view="today"><svg viewBox="0 0 24 24"><path d="M4 12l5 5L20 6"/></svg><span>Aaj</span></button>
   <button type="button" class="tab" data-view="notes"><svg viewBox="0 0 24 24"><path d="M5 4h14v16H5zM8 8h8M8 12h8M8 16h5"/></svg><span>Notes</span></button>
   <button type="button" class="tab" data-view="progress"><svg viewBox="0 0 24 24"><path d="M5 20V10M12 20V4M19 20v-7"/></svg><span>Progress</span></button>

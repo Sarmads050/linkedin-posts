@@ -124,3 +124,68 @@ hr{border:0;border-top:1px solid var(--line);margin:16px 0}
 
 .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(var(--tabh) + 18px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--paper);padding:10px 16px;border-radius:12px;font-size:.9rem;font-weight:500;z-index:9;max-width:90vw;text-align:center}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+/* ---------- layout wrappers (phone: single column) ---------- */
+.col-left,.col-right{display:flex;flex-direction:column;gap:14px;min-width:0}
+.brand{display:none}
+
+/* ---------- tablet ---------- */
+@media (min-width:700px){
+  .tasks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+  .notes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+  .summary{grid-template-columns:auto 1fr}
+}
+
+/* ---------- laptop / desktop: sidebar + wide content ---------- */
+@media (min-width:980px){
+  :root{--side:248px}
+  body{font-size:16.5px}
+  .tabbar{top:0;right:auto;width:var(--side);display:flex;flex-direction:column;gap:4px;border-top:0;border-right:1px solid var(--line);
+    padding:22px 14px;justify-content:flex-start}
+  .brand{display:flex;align-items:center;gap:10px;padding:4px 10px 22px;border-bottom:1px solid var(--line);margin-bottom:12px}
+  .brand img{border-radius:10px}
+  .brand b{display:block;font-family:var(--display);font-size:1.05rem}
+  .brand span{display:block;font-size:.75rem;color:var(--muted)}
+  .tab{flex-direction:row;justify-content:flex-start;gap:12px;padding:12px 14px;border-radius:12px;font-size:.95rem;min-height:0}
+  .tab:hover{background:var(--paper)}
+  .tab.active{background:var(--red-soft);color:var(--red)}
+  .appbar{margin-left:var(--side)}
+  .appbar-in,main{max-width:1180px;padding-left:40px;padding-right:40px}
+  .appbar-in{padding-top:22px;padding-bottom:16px}
+  h1{font-size:2.1rem}
+  main{margin-left:var(--side);padding-top:24px;padding-bottom:48px}
+  @supports (margin-inline:auto){main,.appbar-in{margin-right:auto}}
+  .toast{bottom:28px;left:calc(50% + var(--side)/2)}
+
+  /* Today: summary on the left, searches on the right */
+  #view-today:not([hidden]){display:grid;grid-template-columns:340px minmax(0,1fr);grid-template-rows:auto 1fr;column-gap:24px;row-gap:14px;align-items:start}
+  #view-today .col-left{grid-column:1;grid-row:1}
+  #view-today .col-left-2{grid-column:1;grid-row:2}
+  #view-today .col-right{grid-column:2;grid-row:1 / span 2}
+  #view-today .col-left:first-child{position:sticky;top:110px}
+  .summary{grid-template-columns:1fr;justify-items:center;text-align:left;padding:22px}
+  .summary-side{width:100%}
+  .ring-wrap{width:150px;height:150px}
+  .ring-num b{font-size:2.6rem}
+  .howto[open],.howto{display:block}
+  .tasks{grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+  .task{padding:18px}
+  .q{font-size:1.25rem}
+
+  /* Notes: 3 columns */
+  .notes{grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+  .lead{max-width:70ch}
+
+  /* Progress: chart + KPIs side by side, library full width */
+  #view-progress:not([hidden]){display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:16px;align-items:start}
+  #view-progress > .card:first-child{grid-column:1}
+  #view-progress > .grid3{grid-column:2;grid-template-columns:1fr;gap:12px}
+  #view-progress > .card:last-child{grid-column:1 / -1}
+  .chart{height:220px;gap:10px}
+
+  /* Settings: two columns of cards */
+  #view-settings:not([hidden]){display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:start}
+}
+@media (min-width:1360px){
+  .tasks{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
