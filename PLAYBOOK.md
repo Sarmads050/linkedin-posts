@@ -53,6 +53,10 @@ One post per day. Before creating a post, check Buffer for a post already schedu
 - 3–5 hashtags, e.g. #PublicHealth #PrimaryHealthCare #Pakistan #Nutrition #MIS #DataQuality.
 - No links in the post body.
 
+## Prepared posts (queue)
+
+If `queue/` has a file whose `date` is today (Asia/Karachi), publish that prepared post (its image, caption body, alt text) instead of creating a new one, then move the file to `queue/done/` and log it using its `log` field.
+
 ## Publishing steps
 
 1. Save the image as `images/YYYY-MM-DD-<series>-NN.png` on branch `posts`, commit, push.
