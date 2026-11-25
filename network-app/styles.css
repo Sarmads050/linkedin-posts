@@ -186,6 +186,3 @@ hr{border:0;border-top:1px solid var(--line);margin:16px 0}
   /* Settings: two columns of cards */
   #view-settings:not([hidden]){display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:start}
 }
-@media (min-width:1360px){
-  .tasks{grid-template-columns:repeat(2,minmax(0,1fr))}
-}
