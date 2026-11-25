@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Network Daily</title>
+<meta name="description" content="Daily LinkedIn networking plan for health MIS and data professionals.">
+<meta name="theme-color" content="#14161B">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Network">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="appbar">
+  <div class="appbar-in">
+    <div>
+      <div class="eyebrow" id="dateLabel">Today</div>
+      <h1 id="viewTitle">Aaj ka plan</h1>
+    </div>
+    <div class="streak" id="streakPill" title="Lagatar din">🔥 <b id="streakNum">0</b></div>
+  </div>
+</header>
+
+<main id="main">
+  <!-- TODAY -->
+  <section class="view" id="view-today" aria-labelledby="viewTitle">
+    <div class="banner" id="fridayBanner" hidden>
+      <b>Friday safai:</b> My Network → Manage → Sent mein ja kar 3 hafte purani pending requests "Withdraw" kar dein.
+    </div>
+    <div class="banner warn" id="limitBanner" hidden></div>
+
+    <div class="summary card">
+      <div class="ring-wrap">
+        <svg class="ring" viewBox="0 0 120 120" aria-hidden="true">
+          <circle cx="60" cy="60" r="50" class="ring-bg"/>
+          <circle cx="60" cy="60" r="50" class="ring-fg" id="ringFg"/>
+        </svg>
+        <div class="ring-num"><b id="todayCount">0</b><span>/ <span id="todayTarget">18</span></span></div>
+      </div>
+      <div class="summary-side">
+        <div class="stat"><span class="label">Pichle 7 din</span><b><span id="weekCount">0</span> <small>/ <span id="weekLimitLabel">100</span></small></b>
+          <div class="bar"><i id="weekBar"></i></div><span class="status" id="weekStatus"></span></div>
+        <div class="stat"><span class="label">Aaj ke comments</span>
+          <div class="stepper small">
+            <button type="button" class="step" data-act="com-" aria-label="Comment kam karein">−</button>
+            <b><span id="comCount">0</span> <small>/ 3</small></b>
+            <button type="button" class="step" data-act="com+" aria-label="Comment add karein">+</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-head"><h2>Aaj ki 4 searches</h2><label class="toggle"><input type="checkbox" id="only2nd"> Sirf 2nd-degree</label></div>
+    <ol class="tasks" id="tasks"></ol>
+
+    <details class="card howto">
+      <summary>Kaise karein? (1 minute)</summary>
+      <ol>
+        <li><b>LinkedIn kholein</b> dabayein. Search LinkedIn app mein khulegi.</li>
+        <li>Headline mein <i>MIS, M&amp;E, DHIS2, Nutrition, Data</i> wale log chunein. Students, sales, crypto wale chhor dein.</li>
+        <li><b>Connect</b> dabayein. Khaas logon ke liye pehle <b>Note copy</b> kar ke "Add a note" mein paste karein.</li>
+        <li>Wapas aa kar us card par <b>+1</b> dabayein.</li>
+      </ol>
+    </details>
+  </section>
+
+  <!-- NOTES -->
+  <section class="view" id="view-notes" hidden>
+    <p class="lead">Free account par mahine mein chand notes hi milte hain. Notes sirf khaas logon ke liye. [Name] badalna na bhoolein.</p>
+    <div class="notes" id="notes"></div>
+  </section>
+
+  <!-- PROGRESS -->
+  <section class="view" id="view-progress" hidden>
+    <div class="card">
+      <h2>Pichle 14 din</h2>
+      <div class="chart" id="chart" role="img" aria-label="Pichle 14 din ki requests"></div>
+    </div>
+    <div class="grid3">
+      <div class="card kpi"><span class="label">Kul requests</span><b id="kpiTotal">0</b></div>
+      <div class="card kpi"><span class="label">Lagatar din</span><b id="kpiStreak">0</b></div>
+      <div class="card kpi"><span class="label">Behtareen din</span><b id="kpiBest">0</b></div>
+    </div>
+    <div class="card">
+      <h2>Searches ki list</h2>
+      <p class="muted">Koi bhi search kabhi bhi khol sakte hain.</p>
+      <div id="library"></div>
+    </div>
+  </section>
+
+  <!-- SETTINGS -->
+  <section class="view" id="view-settings" hidden>
+    <div class="card form">
+      <h2>Targets</h2>
+      <label for="setTarget">Roz ka target</label>
+      <input type="number" id="setTarget" min="5" max="25" inputmode="numeric">
+      <label for="setLimit">Hafte ki safe limit</label>
+      <input type="number" id="setLimit" min="50" max="150" inputmode="numeric">
+      <p class="muted">LinkedIn aam account ko hafte mein lagbhag 100 requests deta hai. Isay 100 se upar na rakhein.</p>
+    </div>
+    <div class="card">
+      <h2>Usool (account safe rakhein)</h2>
+      <ol class="rules">
+        <li>Har request khud bhejein. Kisi bot, extension ya tool se nahi.</li>
+        <li>Roz 15–20, hafte mein 100 se kam.</li>
+        <li>Har Friday 3 hafte purani pending requests withdraw karein.</li>
+        <li>Accept hone par 1–2 din baad un ki post par comment karein. Seedha job na maangein.</li>
+        <li>"Weekly limit" ka message aaye to us hafte ruk jayein.</li>
+      </ol>
+    </div>
+    <div class="card">
+      <h2>Backup</h2>
+      <p class="muted">Data sirf isi phone mein save hota hai. Phone badalne se pehle backup copy kar lein.</p>
+      <div class="row">
+        <button type="button" class="btn ghost" id="exportBtn">Backup copy karein</button>
+        <button type="button" class="btn ghost" id="importBtn">Backup paste karein</button>
+      </div>
+      <textarea id="backupBox" rows="4" placeholder="Backup yahan aayega / yahan paste karein" hidden></textarea>
+      <button type="button" class="btn" id="importApply" hidden>Backup lagayein</button>
+      <hr>
+      <button type="button" class="btn danger" id="resetBtn">Sab data mitayein</button>
+      <div class="confirm" id="resetConfirm" hidden>
+        <span>Pakka? Yeh wapas nahi hoga.</span>
+        <button type="button" class="btn danger" id="resetYes">Haan, mitayein</button>
+        <button type="button" class="btn ghost" id="resetNo">Nahi</button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<nav class="tabbar" aria-label="App sections">
+  <button type="button" class="tab active" data-view="today"><svg viewBox="0 0 24 24"><path d="M4 12l5 5L20 6"/></svg><span>Aaj</span></button>
+  <button type="button" class="tab" data-view="notes"><svg viewBox="0 0 24 24"><path d="M5 4h14v16H5zM8 8h8M8 12h8M8 16h5"/></svg><span>Notes</span></button>
+  <button type="button" class="tab" data-view="progress"><svg viewBox="0 0 24 24"><path d="M5 20V10M12 20V4M19 20v-7"/></svg><span>Progress</span></button>
+  <button type="button" class="tab" data-view="settings"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1"/></svg><span>Settings</span></button>
+</nav>
+
+<div class="toast" id="toast" role="status" hidden></div>
+<script src="app.js"></script>
+</body>
+</html>
