@@ -56,6 +56,6 @@ One post per day. Before creating a post, check Buffer for a post already schedu
 ## Publishing steps
 
 1. Save the image as `images/YYYY-MM-DD-<series>-NN.png` on branch `posts`, commit, push.
-2. Confirm `https://raw.githubusercontent.com/Sarmads050/linkedin-posts/posts/images/<file>.png` returns HTTP 200 (retry for up to ~2 minutes).
+2. Build the image URL with the pushed commit's full SHA (not the branch name, which can serve a cached old file): `https://raw.githubusercontent.com/Sarmads050/linkedin-posts/<commit-sha>/images/<file>.png`, and confirm it returns HTTP 200 (retry for up to ~2 minutes).
 3. Buffer: organization `6ae0788be586811d71fdec73`, LinkedIn channel `6b068cc88541f09ecb994420` (Sarmad Ali, profile). `create_post` with `schedulingType: "automatic"`, `mode: "shareNow"`, the caption as `text`, and the image URL as an image asset with descriptive `altText`.
 4. Append a row to `posts-log.md` (date, series, number, topic/study, source with month, image file) and push.
