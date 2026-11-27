@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__Buffer__create_post",
+      "mcp__Buffer__list_posts",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(git pull:*)",
+      "Bash(node:*)",
+      "Bash(curl:*)"
+    ]
+  }
+}
