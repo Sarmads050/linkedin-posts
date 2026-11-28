@@ -37,7 +37,7 @@ if (kind === 'research') {
     const since = new Date(pk.getTime() - 180 * 86400000).toISOString().slice(0, 10);
     const cands = await findCandidates({ used: state.used_research, fromDate: since > '2026-01-01' ? since : '2026-01-01' });
     log(`${cands.length} candidate studies`);
-    for (const s of cands.slice(0, 4)) { // at most 4 Gemini calls per day
+    for (const s of cands.slice(0, 3)) { // at most 3 studies per day
       log(`trying ${s.id}: ${s.title.slice(0, 90)}`);
       let brief;
       try { brief = await briefFromAbstract(s, process.env.GEMINI_API_KEY); }

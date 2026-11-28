@@ -102,7 +102,11 @@ async function callGemini(prompt, schema, apiKey, temperature = 0.3) {
   const errs = [];
   if (process.env.GROQ_API_KEY) { try { return await callGroq(prompt, schema, temperature); } catch (e) { errs.push(e.message.slice(0, 160)); } }
   if (apiKey) {
-    for (const model of (await geminiModels(apiKey)).slice(0, 4)) {
+    const sleep = ms => new Promise(r => setTimeout(r, ms));
+    for (const [mi, model] of (await geminiModels(apiKey)).slice(0, 4).entries()) {
+     // busy servers (503/429): wait and retry the best models a few times
+     for (let attempt = 0; attempt < (mi < 2 ? 4 : 1); attempt++) {
+      if (attempt) await sleep(20000 * attempt);
       try {
         const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
           method: 'POST',
@@ -112,11 +116,16 @@ async function callGemini(prompt, schema, apiKey, temperature = 0.3) {
             generationConfig: { temperature, responseMimeType: 'application/json', responseSchema: schema },
           }),
         });
-        if (!res.ok) { errs.push(`Gemini ${model} ${res.status}: ${(await res.text()).replace(/\s+/g, ' ').slice(0, 160)}`); continue; }
+        if (!res.ok) {
+          errs.push(`Gemini ${model} ${res.status}: ${(await res.text()).replace(/\s+/g, ' ').slice(0, 120)}`);
+          if (res.status === 503 || res.status === 429) continue; // retry same model
+          break; // other errors: next model
+        }
         const j = await res.json();
         const txt = j.candidates?.[0]?.content?.parts?.filter(p => !p.thought).map(p => p.text).join('') || '';
         return JSON.parse(txt);
-      } catch (e) { errs.push(`Gemini ${model}: ${e.message.slice(0, 160)}`); }
+      } catch (e) { errs.push(`Gemini ${model}: ${e.message.slice(0, 120)}`); }
+     }
     }
   }
   try { return await callGitHubModels(prompt, schema, temperature); }
