@@ -7,7 +7,7 @@ import { findCandidates } from './research.mjs';
 import { briefFromAbstract, reviewBrief } from './gemini.mjs';
 import { verifyBrief } from './verify.mjs';
 import { renderPng } from './render.mjs';
-import { publish } from './buffer.mjs';
+import { publish, checkKey } from './buffer.mjs';
 
 const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
 const STATE = path.join(ROOT, 'data/state.json');
@@ -41,7 +41,7 @@ if (kind === 'research') {
       log(`trying ${s.id}: ${s.title.slice(0, 90)}`);
       let brief;
       try { brief = await briefFromAbstract(s, process.env.GEMINI_API_KEY); }
-      catch (e) { log('gemini error:', e.message); continue; }
+      catch (e) { log('gemini error:', e.message); if (/40[0-3]|depleted|API key/i.test(e.message)) { log('Gemini key/billing problem, stopping research for today'); break; } continue; }
       const v = verifyBrief(brief, s.abstract);
       if (!v.ok) { log('rejected:', v.problems.join('; ')); state.used_research.push(s.id); continue; }
       // old data is not "latest data": skip if collected more than 5 years before publication
@@ -88,7 +88,11 @@ if (kind === 'tip') {
 }
 
 log(`\n----- ${post.kind.toUpperCase()} #${post.no} -----\n${post.text}\n-----`);
-if (DRY) { log('DRY_RUN: image at', post.file, '(not pushed, not posted)'); process.exit(0); }
+if (DRY) {
+  try { log('Buffer key OK, organizations:', (await checkKey(process.env.BUFFER_API_KEY)).join(', ')); }
+  catch (e) { log('Buffer key PROBLEM:', e.message); }
+  log('DRY_RUN: image at', post.file, '(not pushed, not posted)'); process.exit(0);
+}
 
 // 1) publish image to GitHub so Buffer can fetch it
 sh(`git add "${post.file}"`);

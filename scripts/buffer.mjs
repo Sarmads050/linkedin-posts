@@ -23,3 +23,15 @@ export async function publish({ apiKey, channelId, text, imageUrl, altText }) {
   if (!r?.post) throw new Error(`Buffer: ${r?.message || 'unknown error'}`);
   return r.post;
 }
+
+// Lightweight key check used in test runs (reads only, posts nothing).
+export async function checkKey(apiKey) {
+  const res = await fetch(ENDPOINT, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${apiKey}` },
+    body: JSON.stringify({ query: '{ account { organizations { id name } } }' }),
+  });
+  const j = await res.json().catch(() => ({}));
+  if (!res.ok || j.errors) throw new Error(`Buffer key check ${res.status}: ${JSON.stringify(j.errors || j).slice(0, 200)}`);
+  return j.data?.account?.organizations?.map(o => o.name) || [];
+}
