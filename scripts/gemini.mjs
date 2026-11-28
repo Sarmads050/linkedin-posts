@@ -118,8 +118,8 @@ async function callGemini(prompt, schema, apiKey, temperature = 0.3) {
         });
         if (!res.ok) {
           errs.push(`Gemini ${model} ${res.status}: ${(await res.text()).replace(/\s+/g, ' ').slice(0, 120)}`);
-          if (res.status === 503 || res.status === 429) continue; // retry same model
-          break; // other errors: next model
+          if (res.status === 503) continue; // busy: retry same model after a wait
+          break; // quota (429) or other errors: next model has its own quota
         }
         const j = await res.json();
         const txt = j.candidates?.[0]?.content?.parts?.filter(p => !p.thought).map(p => p.text).join('') || '';
