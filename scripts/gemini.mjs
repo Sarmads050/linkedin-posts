@@ -54,7 +54,7 @@ async function callGitHubModels(prompt, schema, temperature) {
   const model = process.env.GH_MODEL || 'openai/gpt-4.1-mini';
   const res = await fetch('https://models.github.ai/inference/chat/completions', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json' },
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
     body: JSON.stringify({
       model, temperature,
       messages: [
@@ -64,8 +64,9 @@ async function callGitHubModels(prompt, schema, temperature) {
       response_format: { type: 'json_object' },
     }),
   });
-  if (!res.ok) throw new Error(`GitHub Models ${res.status}: ${(await res.text()).slice(0, 200)}`);
-  const j = await res.json();
+  const body = await res.text();
+  if (!res.ok) throw new Error(`GitHub Models ${res.status}: ${body.slice(0, 200)}`);
+  let j; try { j = JSON.parse(body); } catch { throw new Error(`GitHub Models non-JSON reply: ${body.slice(0, 200)}`); }
   const out = JSON.parse(j.choices?.[0]?.message?.content || '{}');
   for (const k of schema.required || []) if (!(k in out)) throw new Error(`GitHub Models answer missing "${k}"`);
   return out;
