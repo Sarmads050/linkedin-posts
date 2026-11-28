@@ -1,5 +1,5 @@
 // Gemini (free tier) turns one abstract into structured post content. Output is JSON only.
-const MODELS = [process.env.GEMINI_MODEL, 'gemini-flash-latest', 'gemini-2.5-flash'].filter(Boolean);
+const MODELS = [process.env.GEMINI_MODEL, 'gemini-3.8-flash', 'gemini-flash-latest', 'gemini-2.5-flash'].filter(Boolean);
 
 const SCHEMA = {
   type: 'OBJECT',
