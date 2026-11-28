@@ -79,29 +79,49 @@ async function callChat(name, url, token, model, prompt, schema, temperature) {
   return out;
 }
 
+// Ask Google which Flash models this key can use, newest first (model names change often).
+let modelCache;
+async function geminiModels(apiKey) {
+  if (modelCache) return modelCache;
+  const names = [];
+  try {
+    const res = await fetch('https://generativelanguage.googleapis.com/v1beta/models?pageSize=200', { headers: { 'x-goog-api-key': apiKey } });
+    const j = await res.json();
+    for (const m of j.models || []) {
+      const n = (m.name || '').replace('models/', '');
+      if (/flash/.test(n) && !/lite|image|tts|audio|live|embedding|thinking|exp/.test(n) && (m.supportedGenerationMethods || []).includes('generateContent')) names.push(n);
+    }
+  } catch {}
+  const ver = n => parseFloat((n.match(/gemini-(\d+(?:\.\d+)?)/) || [0, 0])[1]);
+  names.sort((a, b) => ver(b) - ver(a) || /preview/.test(a) - /preview/.test(b));
+  modelCache = [...new Set([...MODELS.filter(m => m === process.env.GEMINI_MODEL), ...names, ...MODELS])];
+  return modelCache;
+}
+
 async function callGemini(prompt, schema, apiKey, temperature = 0.3) {
-  let lastErr;
-  if (process.env.GROQ_API_KEY) { try { return await callGroq(prompt, schema, temperature); } catch (e) { lastErr = e; } }
-  if (!apiKey) { if (lastErr) throw lastErr; return callGitHubModels(prompt, schema, temperature); }
-  for (const model of MODELS) {
-    try {
-      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'x-goog-api-key': apiKey },
-        body: JSON.stringify({
-          contents: [{ role: 'user', parts: [{ text: prompt }] }],
-          generationConfig: { temperature, responseMimeType: 'application/json', responseSchema: schema },
-        }),
-      });
-      if (!res.ok) { lastErr = new Error(`Gemini ${model} ${res.status}: ${(await res.text()).slice(0, 200)}`); continue; }
-      const j = await res.json();
-      const txt = j.candidates?.[0]?.content?.parts?.map(p => p.text).join('') || '';
-      return JSON.parse(txt);
-    } catch (e) { lastErr = e; }
+  const errs = [];
+  if (process.env.GROQ_API_KEY) { try { return await callGroq(prompt, schema, temperature); } catch (e) { errs.push(e.message.slice(0, 160)); } }
+  if (apiKey) {
+    for (const model of (await geminiModels(apiKey)).slice(0, 4)) {
+      try {
+        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'x-goog-api-key': apiKey },
+          body: JSON.stringify({
+            contents: [{ role: 'user', parts: [{ text: prompt }] }],
+            generationConfig: { temperature, responseMimeType: 'application/json', responseSchema: schema },
+          }),
+        });
+        if (!res.ok) { errs.push(`Gemini ${model} ${res.status}: ${(await res.text()).replace(/\s+/g, ' ').slice(0, 160)}`); continue; }
+        const j = await res.json();
+        const txt = j.candidates?.[0]?.content?.parts?.filter(p => !p.thought).map(p => p.text).join('') || '';
+        return JSON.parse(txt);
+      } catch (e) { errs.push(`Gemini ${model}: ${e.message.slice(0, 160)}`); }
+    }
   }
-  // Gemini unavailable (no credits, quota, key problem): try the GitHub Models fallback
   try { return await callGitHubModels(prompt, schema, temperature); }
-  catch (e) { throw new Error(`${lastErr ? lastErr.message : 'Gemini failed'} | fallback: ${e.message}`); }
+  catch (e) { errs.push(e.message.slice(0, 120)); }
+  throw new Error(errs.join(' || '));
 }
 
 export function briefFromAbstract(study, apiKey) {
