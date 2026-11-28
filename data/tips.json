@@ -1,0 +1,322 @@
+[
+  {
+    "topic": "Dashboards · KPI",
+    "headline": "A dashboard nobody opens is just a report with colours.",
+    "accent": "nobody opens",
+    "points": [
+      {"title": "Start with the decision", "text": "Ask who will look at it and what they will do differently after."},
+      {"title": "Fewer charts", "text": "Five KPIs people check beat forty that nobody understands."},
+      {"title": "Show the trend", "text": "This month's number means little without the last few months next to it."},
+      {"title": "Flag what needs action", "text": "Colour only the indicators that are off track, not everything."}
+    ],
+    "sticky": "If a chart doesn't lead to action, remove it.",
+    "pointer": "Review your dashboard with one real user every quarter",
+    "caption": "A dashboard nobody opens is just a report with colours.\n\nWhen we build KPI dashboards for health programmes, it's tempting to add every indicator we collect. The result looks impressive and gets ignored.\n\nWhat makes a dashboard actually used:\n– start from the decision it should support, not the data you have\n– keep it to the handful of KPIs managers really track\n– always show the trend, not just this month's number\n– use colour only to flag what is off track\n\nThe best test is simple: sit with one manager, watch them use it, and remove whatever they skip.\n\nWhat's the one KPI on your dashboard that people actually check every week?",
+    "hashtags": ["Dashboards", "KPI", "MIS", "DataVisualization", "PublicHealth"],
+    "alt": "Data Tip: A dashboard nobody opens is just a report with colours. Four points: start with the decision, fewer charts, show the trend, flag what needs action."
+  },
+  {
+    "topic": "Reporting · Leadership",
+    "headline": "Write the CEO report for a reader with two minutes.",
+    "accent": "two minutes",
+    "points": [
+      {"title": "Lead with the change", "text": "Open with the few numbers that moved most since last time."},
+      {"title": "Say why", "text": "One line of explanation next to each change saves a meeting."},
+      {"title": "Ask for a decision", "text": "End with what leadership needs to approve or act on."},
+      {"title": "Annex the rest", "text": "Detailed tables go at the back for those who want them."}
+    ],
+    "sticky": "Write for the reader, not for the data.",
+    "pointer": "Read your report aloud in two minutes before sending",
+    "caption": "A CEO report is not a shorter version of the monthly report.\n\nSenior leaders usually have a couple of minutes for it, between meetings. If the key message is on page six, it is effectively missing.\n\nA structure that works well:\n– open with the few numbers that changed most\n– add one line on why each changed\n– end with the decisions or support you need\n– move the detailed tables to an annex\n\nIt takes more effort to write less, but it is the difference between a report that is filed and one that is acted on.\n\nHow do you decide what goes on the first page of a report for leadership?",
+    "hashtags": ["Reporting", "MIS", "Leadership", "DataForDecisionMaking"],
+    "alt": "Data Tip: Write the CEO report for a reader with two minutes. Lead with the change, say why, ask for a decision, annex the rest."
+  },
+  {
+    "topic": "Field Coordination",
+    "headline": "Data quality is a people skill before it is a technical one.",
+    "accent": "people skill",
+    "points": [
+      {"title": "Call, don't only email", "text": "A short call often finds the cause of a repeated error faster than reminders."},
+      {"title": "Ask why, not who", "text": "Understand the process problem instead of blaming the person."},
+      {"title": "Share the results back", "text": "Teams care about data they see being used."},
+      {"title": "Thank the good reporters", "text": "Recognising on-time, clean submissions spreads the habit."}
+    ],
+    "sticky": "Systems matter. Relationships matter more.",
+    "pointer": "Coordinating with field focal persons",
+    "caption": "Data quality is a people skill before it is a technical one.\n\nWhen you coordinate reporting with many districts, the same errors often repeat. Another reminder email rarely fixes them. Understanding why they happen usually does.\n\nWhat helps:\n– pick up the phone for repeated issues\n– ask what is making the error happen, not who made it\n– share the analysis back so field teams see their data being used\n– publicly thank districts that report on time and clean\n\nTools and validation rules help, but trust with the people entering the data is what keeps quality high month after month.\n\nWhat has worked best for you in improving reporting from the field?",
+    "hashtags": ["DataQuality", "MIS", "Teamwork", "PublicHealth", "Pakistan"],
+    "alt": "Data Tip: Data quality is a people skill before it is a technical one. Call, ask why, share results back, thank good reporters."
+  },
+  {
+    "topic": "Deviation Reports",
+    "headline": "Totals tell you how you're doing. Deviations tell you where to look.",
+    "accent": "where to look",
+    "points": [
+      {"title": "Define normal", "text": "Set an expected range for each indicator per facility."},
+      {"title": "List the outliers", "text": "Show only facilities outside that range, with the gap."},
+      {"title": "Add a status column", "text": "Track whether each deviation was explained or fixed."},
+      {"title": "Review every week", "text": "Small deviations caught early don't become big ones."}
+    ],
+    "sticky": "A short list of outliers beats a 10-page summary.",
+    "pointer": "Build it once in Excel with conditional formatting",
+    "caption": "Totals tell you how the programme is doing. Deviations tell you where to look.\n\nA district total can look fine while a few facilities have stopped reporting or are reporting impossible numbers. A deviation report puts those few in front of you.\n\nA simple way to build one:\n– define an expected range for each indicator\n– list only the facilities outside it, with the size of the gap\n– add a status column: explained, being checked, fixed\n– review it every week, not just at month end\n\nIt turns monitoring from reading tables into following up on specific places.\n\nDo you use deviation or exception reports in your work?",
+    "hashtags": ["MonitoringAndEvaluation", "MIS", "DataAnalysis", "HealthSystems"],
+    "alt": "Data Tip: Totals tell you how you're doing, deviations tell you where to look. Define normal, list outliers, add status column, review weekly."
+  },
+  {
+    "topic": "Excel · Productivity",
+    "headline": "Stop copy-pasting district sheets. Combine them once.",
+    "accent": "Combine them once",
+    "points": [
+      {"title": "One template", "text": "Every district uses the same columns in the same order."},
+      {"title": "One folder", "text": "Save all submissions in a single shared folder."},
+      {"title": "Power Query", "text": "Data › Get Data › From Folder combines every file in one step."},
+      {"title": "Refresh, don't rebuild", "text": "Next month, drop in new files and click Refresh."}
+    ],
+    "sticky": "Build it once. Refresh it every month.",
+    "pointer": "Excel › Data › Get Data › From Folder",
+    "caption": "If you still copy-paste district sheets into one master file every month, there's a faster way.\n\nExcel's Power Query can combine every file in a folder into one table, and repeat it with one click.\n\nThe setup:\n– give every district the same template with the same columns\n– keep all submissions in one folder\n– use Data › Get Data › From Folder and combine the files\n– next month, add the new files and press Refresh\n\nIt removes hours of manual work and a whole category of copy-paste errors. The first setup takes some patience, after that it pays back every single month.\n\nWhat is the most time-consuming manual step in your monthly reporting?",
+    "hashtags": ["Excel", "PowerQuery", "MIS", "Reporting", "Productivity"],
+    "alt": "Data Tip: Stop copy-pasting district sheets, combine them once with Power Query. One template, one folder, Get Data From Folder, refresh monthly."
+  },
+  {
+    "topic": "DHIS2 · HMIS",
+    "headline": "Learning DHIS2 is one of the best investments for health MIS staff.",
+    "accent": "best investments",
+    "points": [
+      {"title": "Start free", "text": "DHIS2 Academy offers free online fundamentals courses."},
+      {"title": "Learn the data model", "text": "Data elements, org units and periods explain most of the system."},
+      {"title": "Practise on the demo", "text": "The public demo instance lets you try everything safely."},
+      {"title": "Link it to your work", "text": "Map your current reports to how DHIS2 would store them."}
+    ],
+    "sticky": "Know the system your data will live in.",
+    "pointer": "academy.dhis2.org · free courses",
+    "caption": "If you work in health MIS in Pakistan, DHIS2 is worth learning now.\n\nMore and more health departments and programmes run their reporting on it, and people who understand both the system and the field reality are hard to find.\n\nA simple way to start:\n– take the free fundamentals courses on DHIS2 Academy\n– understand the core data model: data elements, organisation units and periods\n– practise on the public demo instance\n– map one of your current reports to how DHIS2 would capture it\n\nEven if your programme uses another system today, the concepts carry over.\n\nAre you using DHIS2 in your work, or planning to learn it?",
+    "hashtags": ["DHIS2", "HMIS", "DigitalHealth", "MIS", "Pakistan"],
+    "alt": "Data Tip: Learning DHIS2 is one of the best investments for health MIS staff. Start free, learn the data model, practise on the demo, link it to your work."
+  },
+  {
+    "topic": "Data Management",
+    "headline": "If two people can't find last month's file, you don't have a system.",
+    "accent": "don't have a system",
+    "points": [
+      {"title": "One naming rule", "text": "Use the same pattern every time, e.g. YYYY-MM_District_Report."},
+      {"title": "Dates first", "text": "Starting names with the date sorts files in order automatically."},
+      {"title": "Final means final", "text": "Avoid 'final_v2_new'. Keep versions in one archive folder."},
+      {"title": "Write it down", "text": "Put the rule in a short note everyone can see."}
+    ],
+    "sticky": "Good naming is free documentation.",
+    "pointer": "Example: 2026-11_DistrictA_Monthly.xlsx",
+    "caption": "If two people can't find last month's file, you don't have a data system yet.\n\nFile naming sounds trivial until a report has to be re-done and nobody knows which version is final.\n\nSimple rules that solve most of it:\n– agree one naming pattern and use it every time\n– start names with the date (year-month) so files sort themselves\n– no more \"final_v2_new\": keep old versions in an archive folder\n– write the rule down where the whole team can see it\n\nIt costs nothing, and it saves time every single week.\n\nWhat naming rule does your team use for reports and data files?",
+    "hashtags": ["DataManagement", "MIS", "Productivity", "Reporting"],
+    "alt": "Data Tip: If two people can't find last month's file, you don't have a system. One naming rule, dates first, final means final, write it down."
+  },
+  {
+    "topic": "Indicators · M&E",
+    "headline": "Every indicator needs a definition sheet before it needs a chart.",
+    "accent": "definition sheet",
+    "points": [
+      {"title": "Numerator & denominator", "text": "Write exactly what is counted on top and on the bottom."},
+      {"title": "Source", "text": "Name the register or form each number comes from."},
+      {"title": "Frequency", "text": "State how often it is reported and by whom."},
+      {"title": "Known issues", "text": "Note common errors so new staff don't repeat them."}
+    ],
+    "sticky": "Same name, different formula = two indicators.",
+    "pointer": "Keep one indicator reference sheet for the whole programme",
+    "caption": "Every indicator needs a definition sheet before it needs a chart.\n\nTwo districts can report the same indicator name and still be counting different things. When that happens, comparisons and totals stop meaning anything.\n\nA one-page reference for each indicator should cover:\n– the exact numerator and denominator\n– the source register or form\n– reporting frequency and who reports it\n– known issues and common mistakes\n\nIt also makes onboarding new staff much easier, because the logic is written down instead of living in one person's head.\n\nDoes your programme keep an indicator reference sheet?",
+    "hashtags": ["MonitoringAndEvaluation", "Indicators", "MIS", "DataQuality"],
+    "alt": "Data Tip: Every indicator needs a definition sheet before it needs a chart. Numerator and denominator, source, frequency, known issues."
+  },
+  {
+    "topic": "Excel · Formulas",
+    "headline": "XLOOKUP removes most of the headaches of VLOOKUP.",
+    "accent": "XLOOKUP",
+    "points": [
+      {"title": "Look left or right", "text": "The return column no longer has to be to the right."},
+      {"title": "Exact match by default", "text": "No more forgetting FALSE at the end."},
+      {"title": "Built-in 'not found'", "text": "Add a message like \"Missing\" instead of #N/A."},
+      {"title": "Safer when columns move", "text": "Inserting a column doesn't break the formula."}
+    ],
+    "sticky": "=XLOOKUP(code, list, result, \"Missing\")",
+    "pointer": "Available in Excel 2021 and Microsoft 365",
+    "caption": "If you still use VLOOKUP to match facility codes across sheets, try XLOOKUP.\n\nIt does the same job with fewer ways to go wrong:\n– the result column can be on either side\n– exact match is the default\n– you can show a clear message like \"Missing\" instead of #N/A\n– inserting columns doesn't silently break the formula\n\nFor monthly MIS work, where you match facility lists, codes and targets again and again, that means fewer silent errors in the final report.\n\nThe pattern: =XLOOKUP(code, code_list, result_list, \"Missing\")\n\nWhich Excel function saves you the most time in reporting?",
+    "hashtags": ["Excel", "DataAnalysis", "MIS", "Productivity"],
+    "alt": "Data Tip: XLOOKUP removes most of the headaches of VLOOKUP. Looks either direction, exact match by default, built-in not-found message, safer when columns move."
+  },
+  {
+    "topic": "Data Visualization",
+    "headline": "Choose the chart for the question, not for the looks.",
+    "accent": "for the question",
+    "points": [
+      {"title": "Change over time", "text": "Use a line chart."},
+      {"title": "Compare districts", "text": "Use sorted horizontal bars."},
+      {"title": "Progress to target", "text": "Use a bar with a target line."},
+      {"title": "Avoid 3D and pies", "text": "They make small differences hard to read."}
+    ],
+    "sticky": "Sort your bars. Always.",
+    "pointer": "One message per chart, written as its title",
+    "caption": "Choose the chart for the question, not for the looks.\n\nIn programme reports, most charts answer one of a few questions, and each has a chart that answers it best:\n– how is it changing over time? Line chart\n– which districts are ahead or behind? Sorted horizontal bars\n– are we on track to the target? Bar with a target line\n– avoid 3D charts and crowded pies, they hide differences\n\nOne more habit that helps: write the message as the chart title, like \"Three districts are below 60% coverage\", instead of just \"Coverage by district\".\n\nWhat's a chart type you've stopped using in reports?",
+    "hashtags": ["DataVisualization", "Reporting", "MIS", "PublicHealth"],
+    "alt": "Data Tip: Choose the chart for the question. Line for change over time, sorted bars to compare districts, bar with target line for progress, avoid 3D and pies."
+  },
+  {
+    "topic": "Data Protection",
+    "headline": "Health data deserves the same care as patients do.",
+    "accent": "same care",
+    "points": [
+      {"title": "Share the minimum", "text": "Send only the columns the receiver actually needs."},
+      {"title": "Remove identifiers", "text": "Names, phone and ID numbers stay out of shared reports."},
+      {"title": "Lock the files", "text": "Password-protect sheets with personal data."},
+      {"title": "Watch the WhatsApp groups", "text": "Screenshots of registers travel further than you think."}
+    ],
+    "sticky": "Aggregate before you share.",
+    "pointer": "Good practice for anyone handling beneficiary data",
+    "caption": "Health data deserves the same care as patients do.\n\nProgramme data often includes names, phone numbers and ID numbers of mothers and children. In day-to-day reporting it is easy to share more than needed.\n\nA few habits that protect people:\n– share only the columns the receiver needs\n– remove names, phone and ID numbers from anything shared widely\n– password-protect files that contain personal data\n– be careful with screenshots of registers in group chats\n\nAggregated numbers are usually enough for decisions. Personal details should stay with the people who need them for care.\n\nHow does your team handle personal data in reports?",
+    "hashtags": ["DataProtection", "HealthData", "MIS", "Ethics"],
+    "alt": "Data Tip: Health data deserves the same care as patients. Share the minimum, remove identifiers, lock the files, watch the WhatsApp groups."
+  },
+  {
+    "topic": "Monthly Reporting",
+    "headline": "A reporting calendar prevents half of all late reports.",
+    "accent": "reporting calendar",
+    "points": [
+      {"title": "Fix the dates", "text": "Same submission day every month, known by every district."},
+      {"title": "Remind before, not after", "text": "A reminder two days ahead beats a warning two days late."},
+      {"title": "Plan the review", "text": "Block time for checking before the report is due upward."},
+      {"title": "Mark holidays early", "text": "Adjust deadlines around Eid and public holidays in advance."}
+    ],
+    "sticky": "Predictable deadlines get predictable data.",
+    "pointer": "Share the calendar at the start of the year",
+    "caption": "A shared reporting calendar prevents half of all late reports.\n\nWhen deadlines move every month, districts treat them as flexible. When they are fixed and known in advance, submissions become a routine.\n\nWhat a simple calendar should include:\n– the same submission date each month\n– reminders a couple of days before the deadline, not after\n– time set aside for checking before your own report is due\n– adjusted dates around Eid and public holidays, announced early\n\nIt sounds basic, but it shifts follow-up from chasing to checking.\n\nDo the districts you work with have a fixed reporting calendar?",
+    "hashtags": ["Reporting", "MIS", "Planning", "PublicHealth"],
+    "alt": "Data Tip: A reporting calendar prevents half of all late reports. Fix the dates, remind before, plan the review, mark holidays early."
+  },
+  {
+    "topic": "Data Cleaning",
+    "headline": "Never clean the original file. Clean a copy and log the changes.",
+    "accent": "log the changes",
+    "points": [
+      {"title": "Keep the raw file", "text": "Save what districts sent, untouched, in a raw folder."},
+      {"title": "Work on a copy", "text": "All corrections happen in a separate working file."},
+      {"title": "Keep a change log", "text": "What changed, why, and who confirmed it."},
+      {"title": "Feed it back", "text": "Send recurring corrections back to the source."}
+    ],
+    "sticky": "If you can't explain a change, don't make it.",
+    "pointer": "Simple audit trail for programme data",
+    "caption": "Never clean the original file. Clean a copy and keep a log of what you changed.\n\nWhen a number in a report is questioned months later, you need to show where it came from and why it was corrected.\n\nA simple audit trail:\n– keep the raw submissions untouched in their own folder\n– do all corrections in a working copy\n– record every change: what, why, and who confirmed it with the field\n– send recurring corrections back so the source gets fixed too\n\nIt protects the data, the team and the credibility of every report you publish.\n\nDo you keep a change log when cleaning programme data?",
+    "hashtags": ["DataCleaning", "DataQuality", "MIS", "MonitoringAndEvaluation"],
+    "alt": "Data Tip: Never clean the original file, clean a copy and log the changes. Keep the raw file, work on a copy, keep a change log, feed it back."
+  },
+  {
+    "topic": "Pivot Tables",
+    "headline": "Pivot tables answer in seconds what formulas take an hour to build.",
+    "accent": "in seconds",
+    "points": [
+      {"title": "Tidy data first", "text": "One row per record, one column per field, no merged cells."},
+      {"title": "Format as Table", "text": "Ctrl+T, so new rows are included automatically."},
+      {"title": "Drag, don't type", "text": "Districts in rows, months in columns, values in the middle."},
+      {"title": "Add slicers", "text": "Let managers filter by district with one click."}
+    ],
+    "sticky": "Tidy data in, quick answers out.",
+    "pointer": "Insert › PivotTable · then Insert › Slicer",
+    "caption": "Pivot tables answer in seconds what nested formulas take an hour to build.\n\nFor quick questions like \"which districts dropped this month?\" or \"how does this quarter compare to last?\", a pivot table is usually the fastest tool in Excel.\n\nTo make them work well:\n– keep the data tidy: one row per record, no merged cells\n– format the data as a Table (Ctrl+T) so new rows are picked up\n– drag districts to rows, months to columns, values to the middle\n– add slicers so managers can filter without touching formulas\n\nWhat's a question you answer with pivot tables every month?",
+    "hashtags": ["Excel", "PivotTables", "DataAnalysis", "MIS"],
+    "alt": "Data Tip: Pivot tables answer in seconds what formulas take an hour to build. Tidy data first, format as table, drag fields, add slicers."
+  },
+  {
+    "topic": "MIS Troubleshooting",
+    "headline": "Log every field issue. Patterns appear by the third week.",
+    "accent": "Patterns appear",
+    "points": [
+      {"title": "One issue log", "text": "Date, district, what happened, who reported it."},
+      {"title": "Tag the cause", "text": "Login, network, training, form design or data entry."},
+      {"title": "Track resolution", "text": "Open, in progress, resolved, with the fix noted."},
+      {"title": "Review monthly", "text": "The most common cause tells you what to fix first."}
+    ],
+    "sticky": "Fix the pattern, not just the ticket.",
+    "pointer": "A shared sheet is enough to start",
+    "caption": "Log every MIS issue that comes from the field. By the third week, patterns start to appear.\n\nWhen problems are solved one call at a time, the same issue can keep coming back from different districts without anyone noticing.\n\nA simple issue log:\n– date, district, what happened and who reported it\n– a cause tag: login, network, training, form design or data entry\n– status and the fix that worked\n– a monthly look at which causes repeat most\n\nOften the biggest improvement comes from fixing one common cause, like a confusing form field, rather than many individual tickets.\n\nHow do you track MIS issues from the field?",
+    "hashtags": ["MIS", "Troubleshooting", "DataQuality", "HealthSystems"],
+    "alt": "Data Tip: Log every field issue, patterns appear by the third week. One issue log, tag the cause, track resolution, review monthly."
+  },
+  {
+    "topic": "Targets · Coverage",
+    "headline": "A number without a target or a trend is just a number.",
+    "accent": "just a number",
+    "points": [
+      {"title": "Against target", "text": "Show how far each district is from its target."},
+      {"title": "Against last period", "text": "Show if it is improving or slipping."},
+      {"title": "Against peers", "text": "Show where it stands among similar districts."},
+      {"title": "Say it in words", "text": "Add one line: on track, at risk, or off track."}
+    ],
+    "sticky": "Context turns numbers into decisions.",
+    "pointer": "Add target, trend and peer columns to every key table",
+    "caption": "A number without a target or a trend is just a number.\n\n\"District A registered 312 women this month\" doesn't tell a manager whether to worry or celebrate. Context does.\n\nEvery key figure is more useful with:\n– the target, and the gap to it\n– the previous period, to show direction\n– similar districts, to show where it stands\n– a plain-language status: on track, at risk, off track\n\nIt takes a few extra columns and turns a table of figures into something people can act on.\n\nWhich of these comparisons do your reports already include?",
+    "hashtags": ["MonitoringAndEvaluation", "Reporting", "KPI", "MIS"],
+    "alt": "Data Tip: A number without a target or a trend is just a number. Compare against target, last period and peers, and say the status in words."
+  },
+  {
+    "topic": "Google Sheets · Forms",
+    "headline": "A simple online form beats a WhatsApp photo of a register.",
+    "accent": "simple online form",
+    "points": [
+      {"title": "Structured from the start", "text": "Each answer lands in its own column, ready to analyse."},
+      {"title": "Validation built in", "text": "Dropdowns and number limits stop common errors."},
+      {"title": "Timestamped", "text": "You know exactly when each district submitted."},
+      {"title": "Free tools work", "text": "Google Forms or KoboToolbox are enough to start."}
+    ],
+    "sticky": "Collect it clean, don't type it twice.",
+    "pointer": "Try it first for one small weekly report",
+    "caption": "A simple online form beats a WhatsApp photo of a register.\n\nPhotos and messages have to be typed again at head office, which takes time and adds errors. A form collects the data in a clean structure from the start.\n\nWhy it helps:\n– every answer lands in its own column, ready for analysis\n– dropdowns and number limits prevent common mistakes\n– each submission is timestamped, so timeliness tracks itself\n– free tools like Google Forms or KoboToolbox are enough to begin\n\nStart with one small weekly report and expand once the teams are comfortable.\n\nWhat tools do you use to collect data from the field?",
+    "hashtags": ["DataCollection", "MIS", "DigitalHealth", "KoboToolbox"],
+    "alt": "Data Tip: A simple online form beats a WhatsApp photo of a register. Structured, validation built in, timestamped, free tools work."
+  },
+  {
+    "topic": "Career · MIS",
+    "headline": "The most valuable MIS skill isn't Excel. It's explaining the numbers.",
+    "accent": "explaining the numbers",
+    "points": [
+      {"title": "Know the programme", "text": "Understand what each indicator means in the field."},
+      {"title": "Say it simply", "text": "Explain a trend in one sentence a manager remembers."},
+      {"title": "Bring the 'so what'", "text": "Suggest what could be done about it."},
+      {"title": "Keep learning tools", "text": "Excel, Power BI, DHIS2 make the work faster, not more meaningful."}
+    ],
+    "sticky": "Tools change. Clear thinking stays.",
+    "pointer": "Advice for anyone starting in health MIS",
+    "caption": "The most valuable skill in MIS isn't Excel. It's explaining what the numbers mean.\n\nTools matter and are worth learning. But the people others rely on are the ones who can look at a table and say clearly what changed, why it might have changed, and what could be done.\n\nWhat builds that skill:\n– understand the programme behind each indicator\n– practise explaining a trend in one simple sentence\n– always add the \"so what\" for managers\n– keep learning tools like Power BI and DHIS2 to do it faster\n\nWhat skill has helped you most in your data or MIS career?",
+    "hashtags": ["Career", "MIS", "DataAnalysis", "PublicHealth"],
+    "alt": "Data Tip: The most valuable MIS skill is explaining the numbers. Know the programme, say it simply, bring the so-what, keep learning tools."
+  },
+  {
+    "topic": "Power BI",
+    "headline": "Moving from Excel to Power BI? Start with one report, not ten.",
+    "accent": "one report",
+    "points": [
+      {"title": "Pick a monthly report", "text": "Choose one you rebuild by hand every month."},
+      {"title": "Clean in Power Query", "text": "Do the shaping once, then refresh."},
+      {"title": "Few visuals", "text": "Recreate what people already use before adding more."},
+      {"title": "Share and get feedback", "text": "Ask users what they open first."}
+    ],
+    "sticky": "Automate what you repeat.",
+    "pointer": "Power BI Desktop is free to download",
+    "caption": "Moving from Excel to Power BI? Start with one report, not ten.\n\nMany teams try to move everything at once and end up with dashboards nobody trusts. Starting small builds skills and confidence.\n\nA practical path:\n– choose one monthly report you rebuild by hand every time\n– do the data shaping in Power Query so it refreshes\n– recreate the visuals people already use before adding new ones\n– share it with a few users and ask what they look at first\n\nOnce one report saves real time, the case for the next one makes itself.\n\nHave you moved any of your reporting to Power BI yet?",
+    "hashtags": ["PowerBI", "Excel", "DataAnalysis", "MIS"],
+    "alt": "Data Tip: Moving from Excel to Power BI, start with one report. Pick a monthly report, clean in Power Query, few visuals, share and get feedback."
+  },
+  {
+    "topic": "Data Review Meetings",
+    "headline": "A data review meeting should end with actions, not just slides.",
+    "accent": "actions",
+    "points": [
+      {"title": "Send data before", "text": "Share the key tables a day before the meeting."},
+      {"title": "Discuss the outliers", "text": "Spend time on what is off track, not on what's fine."},
+      {"title": "Agree owners", "text": "Every issue gets a person and a date."},
+      {"title": "Start with last actions", "text": "Next meeting opens with what was done."}
+    ],
+    "sticky": "No owner, no action.",
+    "pointer": "Keep a one-page action tracker",
+    "caption": "A data review meeting should end with actions, not just slides.\n\nReview meetings are where data can turn into decisions, but they often become a walk-through of tables that everyone has already seen.\n\nWhat makes them useful:\n– share the key tables a day before\n– spend the time on what is off track\n– give every issue an owner and a date\n– start the next meeting by checking what was done\n\nA one-page action tracker is often the most valuable output of the whole meeting.\n\nHow are data review meetings run in your organisation?",
+    "hashtags": ["DataForDecisionMaking", "MonitoringAndEvaluation", "Leadership", "MIS"],
+    "alt": "Data Tip: A data review meeting should end with actions. Send data before, discuss outliers, agree owners, start with last actions."
+  }
+]

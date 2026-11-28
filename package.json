@@ -1,0 +1,7 @@
+{
+  "name": "linkedin-posts-autopilot",
+  "private": true,
+  "type": "module",
+  "scripts": { "daily": "node scripts/run.mjs" },
+  "dependencies": { "playwright": "1.47.2" }
+}
