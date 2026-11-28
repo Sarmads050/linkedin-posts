@@ -41,7 +41,7 @@ if (kind === 'research') {
       log(`trying ${s.id}: ${s.title.slice(0, 90)}`);
       let brief;
       try { brief = await briefFromAbstract(s, process.env.GEMINI_API_KEY); }
-      catch (e) { log('gemini error:', e.message); if (/40[0-3]|depleted|API key/i.test(e.message)) { log('Gemini key/billing problem, stopping research for today'); break; } continue; }
+      catch (e) { log('gemini error:', e.message); if (/fallback: GitHub Models 4\d\d/.test(e.message)) { log('AI providers unavailable, stopping research for today'); break; } continue; }
       const v = verifyBrief(brief, s.abstract);
       if (!v.ok) { log('rejected:', v.problems.join('; ')); state.used_research.push(s.id); continue; }
       // old data is not "latest data": skip if collected more than 5 years before publication

@@ -39,8 +39,41 @@ Rules:
 - Professional British/International English, no spelling or grammar mistakes, no hype words like "shocking" or "game-changer".
 - If the study is not mainly about Pakistan or not related to primary health care, set relevant=false.`;
 
+// Gemini schema (OBJECT/STRING...) -> standard JSON Schema (object/string...)
+const toJsonSchema = n => {
+  const o = { ...n, type: String(n.type).toLowerCase() };
+  if (n.properties) o.properties = Object.fromEntries(Object.entries(n.properties).map(([k, v]) => [k, toJsonSchema(v)]));
+  if (n.items) o.items = toJsonSchema(n.items);
+  return o;
+};
+
+// Free fallback: GitHub Models, using the workflow's own GITHUB_TOKEN (no extra key needed).
+async function callGitHubModels(prompt, schema, temperature) {
+  const token = process.env.GITHUB_TOKEN;
+  if (!token) throw new Error('no GITHUB_TOKEN for GitHub Models');
+  const model = process.env.GH_MODEL || 'openai/gpt-4.1-mini';
+  const res = await fetch('https://models.github.ai/inference/chat/completions', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json' },
+    body: JSON.stringify({
+      model, temperature,
+      messages: [
+        { role: 'system', content: 'Reply with one JSON object that follows the given JSON schema exactly. No markdown.' },
+        { role: 'user', content: `${prompt}\n\nJSON schema:\n${JSON.stringify(toJsonSchema(schema))}` },
+      ],
+      response_format: { type: 'json_object' },
+    }),
+  });
+  if (!res.ok) throw new Error(`GitHub Models ${res.status}: ${(await res.text()).slice(0, 200)}`);
+  const j = await res.json();
+  const out = JSON.parse(j.choices?.[0]?.message?.content || '{}');
+  for (const k of schema.required || []) if (!(k in out)) throw new Error(`GitHub Models answer missing "${k}"`);
+  return out;
+}
+
 async function callGemini(prompt, schema, apiKey, temperature = 0.3) {
   let lastErr;
+  if (!apiKey) return callGitHubModels(prompt, schema, temperature);
   for (const model of MODELS) {
     try {
       const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
@@ -57,7 +90,9 @@ async function callGemini(prompt, schema, apiKey, temperature = 0.3) {
       return JSON.parse(txt);
     } catch (e) { lastErr = e; }
   }
-  throw lastErr || new Error('Gemini failed');
+  // Gemini unavailable (no credits, quota, key problem): use the free GitHub Models fallback
+  try { return await callGitHubModels(prompt, schema, temperature); }
+  catch (e) { throw new Error(`${lastErr ? lastErr.message : 'Gemini failed'} | fallback: ${e.message}`); }
 }
 
 export function briefFromAbstract(study, apiKey) {
