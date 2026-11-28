@@ -31,9 +31,10 @@ h1 em{font-family:'Instrument Serif';font-style:italic;font-weight:400;font-size
 </style>`;
 
 function researchHtml(b, meta) {
-  const bars = (b.bars || []).slice(0, 5);
-  const facts = (b.facts || []).slice(0, 3);
-  const h1size = b.headline_plain.length > 48 ? 62 : 70;
+  const cmp = meta.compact || 0; // 0 normal, 1 tighter, 2 tightest
+  const bars = (b.bars || []).slice(0, [5, 4, 3][cmp]);
+  const facts = (b.facts || []).slice(0, [3, 2, 0][cmp]);
+  const h1size = (b.headline_plain.length > 48 ? 62 : 70) - cmp * 6;
   const barsHtml = bars.length >= 2 ? `<div class="card bars">
       ${bars.map(x => `<div class="r"><div class="n"><b>${esc(x.label)}</b>${x.sub ? `<span>${esc(x.sub)}</span>` : ''}</div>
         <div class="bw"><i style="width:${Math.max(1.5, x.value)}%"></i></div><em>${esc(x.value)}%</em></div>`).join('')}
@@ -61,7 +62,7 @@ function researchHtml(b, meta) {
     <div class="card hero"><div class="big">${esc(b.big_value)}</div><p>${esc(b.big_label)}</p></div>
     ${barsHtml}
     ${facts.length ? `<div class="facts">${facts.map(f => `<div class="f"><b>${esc(f.value)}</b><span>${esc(f.label)}</span></div>`).join('')}</div>` : ''}
-    <div class="design">${esc(b.design)}</div>
+    ${cmp < 2 ? `<div class="design">${esc(b.design)}</div>` : ''}
     <div class="keep"><div class="hand">Keep in mind: ${esc(b.limitation)}</div></div>
     <div class="take" style="margin-top:22px"><span>WHY IT MATTERS</span>${esc(b.why)}</div>
     <div class="foot"><span>Source: ${esc(meta.sourceShort)}</span><span><b>Sarmad Ali</b> · MIS & Data</span></div>
@@ -90,6 +91,15 @@ function tipHtml(t, meta) {
 }
 
 export async function renderPng(kind, content, meta, outPath) {
+  // research layouts shrink step by step until everything fits
+  for (let compact = 0; compact <= (kind === 'research' ? 2 : 0); compact++) {
+    const r = await renderOnce(kind, content, { ...meta, compact }, outPath);
+    if (!r.overflow) return { ...r, compact };
+  }
+  return { overflow: true };
+}
+
+async function renderOnce(kind, content, meta, outPath) {
   const html = kind === 'research' ? researchHtml(content, meta) : tipHtml(content, meta);
   const browser = await chromium.launch();
   const page = await browser.newPage({ viewport: { width: 1080, height: 1350 }, deviceScaleFactor: 1 });

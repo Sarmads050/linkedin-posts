@@ -133,8 +133,9 @@ async function callGemini(prompt, schema, apiKey, temperature = 0.3) {
   throw new Error(errs.join(' || '));
 }
 
-export function briefFromAbstract(study, apiKey) {
-  const prompt = `${RULES}\n\nTitle: ${study.title}\nJournal: ${study.journal} (${study.pubDate})\nAbstract: ${study.abstract}`;
+export function briefFromAbstract(study, apiKey, fixNotes = '') {
+  const fix = fixNotes ? `\n\nYOUR PREVIOUS DRAFT WAS REJECTED for: ${fixNotes}. Write it again and remove or correct anything that caused this. Every number must be copied exactly from the abstract.` : '';
+  const prompt = `${RULES}${fix}\n\nTitle: ${study.title}\nJournal: ${study.journal} (${study.pubDate})\nAbstract: ${study.abstract}`;
   return callGemini(prompt, SCHEMA, apiKey, 0.3);
 }
 

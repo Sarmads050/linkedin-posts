@@ -42,8 +42,18 @@ if (kind === 'research') {
       let brief;
       try { brief = await briefFromAbstract(s, process.env.GEMINI_API_KEY); }
       catch (e) { log('gemini error:', e.message); if (/40[0-4]|depleted|not valid/.test(e.message) && !/Gemini [^ ]+: Unexpected|JSON/.test(e.message)) { log('AI provider problem, stopping research for today'); break; } continue; }
-      const v = verifyBrief(brief, s.abstract);
-      if (!v.ok) { log('rejected:', v.problems.join('; ')); state.used_research.push(s.id); continue; }
+      let v = verifyBrief(brief, s.abstract);
+      if (!v.ok && brief.relevant) {
+        // one repair attempt: tell the model exactly what failed
+        log('draft failed checks, asking for a corrected draft:', v.problems.join('; '));
+        try { brief = await briefFromAbstract(s, process.env.GEMINI_API_KEY, v.problems.join('; ')); v = verifyBrief(brief, s.abstract); }
+        catch (e) { log('repair error:', e.message.slice(0, 200)); }
+      }
+      if (!v.ok) {
+        log('rejected:', v.problems.join('; '));
+        if (!brief.relevant) state.used_research.push(s.id); // irrelevant studies are never retried; fixable ones may be tried another day
+        continue;
+      }
       // old data is not "latest data": skip if collected more than 5 years before publication
       const dataYears = (brief.data_period.match(/(19|20)\d{2}/g) || []).map(Number);
       if (dataYears.length && Math.max(...dataYears) < Number(s.pubDate.slice(0, 4)) - 5) { log('rejected: data too old', brief.data_period); state.used_research.push(s.id); continue; }
@@ -59,7 +69,7 @@ if (kind === 'research') {
       const sourceShort = `${s.firstAuthor} et al., ${s.journal} · ${monthYear}${dataNote}`;
       const file = `images/${today}-research-brief-${no}.png`;
       const r = await renderPng('research', brief, { no, year: y, sourceShort }, path.join(ROOT, file));
-      if (r.overflow) { log('layout overflow, trying next study'); continue; }
+      if (r.overflow) { log('layout overflow even in compact mode, trying next study'); continue; }
       const tags = brief.hashtags.slice(0, 5).map(h => '#' + h.replace(/^#/, '').replace(/\s+/g, '')).join(' ');
       post = {
         kind, no, file, alt: brief.alt,
