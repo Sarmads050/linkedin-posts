@@ -1,0 +1,64 @@
+name: LinkedIn daily post
+
+on:
+  schedule:
+    # 03:30 UTC = 08:30 Pakistan time, Monday to Saturday (GitHub may start it a little late)
+    - cron: '30 3 * * 1-6'
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Test only: make the image and caption, do not post'
+        type: boolean
+        default: true
+      kind:
+        description: 'Post type'
+        type: choice
+        options: [auto, research, tip]
+        default: auto
+      force:
+        description: 'Ignore the Sunday / already-posted-today checks'
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: linkedin-daily-post
+  cancel-in-progress: false
+
+jobs:
+  post:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: posts
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install
+        run: |
+          npm install --no-audit --no-fund
+          npx playwright install --with-deps chromium
+      - name: Make and publish today's post
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          BUFFER_API_KEY: ${{ secrets.BUFFER_API_KEY }}
+          BUFFER_CHANNEL_ID: 6b068cc88541f09ecb994420
+          DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run && '1' || '0' }}
+          FORCE: ${{ inputs.force && '1' || '' }}
+          KIND_INPUT: ${{ inputs.kind }}
+        run: |
+          git config user.name "linkedin-autopilot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if [ -n "$KIND_INPUT" ] && [ "$KIND_INPUT" != "auto" ]; then export KIND="$KIND_INPUT"; fi
+          node scripts/run.mjs
+      - name: Keep the test image for review
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: preview
+          path: images/*.png
+          retention-days: 7
