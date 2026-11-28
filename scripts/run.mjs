@@ -78,7 +78,7 @@ if (kind === 'research') {
       post = {
         kind, no, file, alt: brief.alt,
         text: `${brief.caption.trim()}\n\nSource: ${s.firstAuthor} et al., ${s.journal} (${monthYear})${s.doi ? ` · doi:${s.doi}` : ''}\n\n${tags}`,
-        logTopic: brief.headline_plain, logSource: `${sourceShort}${s.pmid ? ` (PMID ${s.pmid})` : ''}`, usedId: s.id,
+        brief, logTopic: brief.headline_plain, logSource: `${sourceShort}${s.pmid ? ` (PMID ${s.pmid})` : ''}`, usedId: s.id,
       };
       break;
     }
@@ -103,6 +103,7 @@ if (kind === 'tip') {
 
 log(`\n----- ${post.kind.toUpperCase()} #${post.no} -----\n${post.text}\n-----`);
 if (DRY) {
+  if (post.brief) log('BRIEF_JSON ' + JSON.stringify({ brief: post.brief, source: post.logSource }));
   try { log('Buffer key OK, organizations:', (await checkKey(process.env.BUFFER_API_KEY)).join(', ')); }
   catch (e) { log('Buffer key PROBLEM:', e.message); }
   log('DRY_RUN: image at', post.file, '(not pushed, not posted)'); process.exit(0);
