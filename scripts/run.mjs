@@ -4,7 +4,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { execSync } from 'node:child_process';
 import { findCandidates } from './research.mjs';
-import { briefFromAbstract } from './gemini.mjs';
+import { briefFromAbstract, reviewBrief } from './gemini.mjs';
 import { verifyBrief } from './verify.mjs';
 import { renderPng } from './render.mjs';
 import { publish } from './buffer.mjs';
@@ -33,7 +33,9 @@ let post = null;
 
 if (kind === 'research') {
   try {
-    const cands = await findCandidates({ used: state.used_research });
+    // latest research first: published in the last 180 days (never before 1 Jan 2026)
+    const since = new Date(pk.getTime() - 180 * 86400000).toISOString().slice(0, 10);
+    const cands = await findCandidates({ used: state.used_research, fromDate: since > '2026-01-01' ? since : '2026-01-01' });
     log(`${cands.length} candidate studies`);
     for (const s of cands.slice(0, 4)) { // at most 4 Gemini calls per day
       log(`trying ${s.id}: ${s.title.slice(0, 90)}`);
@@ -42,10 +44,19 @@ if (kind === 'research') {
       catch (e) { log('gemini error:', e.message); continue; }
       const v = verifyBrief(brief, s.abstract);
       if (!v.ok) { log('rejected:', v.problems.join('; ')); state.used_research.push(s.id); continue; }
+      // old data is not "latest data": skip if collected more than 5 years before publication
+      const dataYears = (brief.data_period.match(/(19|20)\d{2}/g) || []).map(Number);
+      if (dataYears.length && Math.max(...dataYears) < Number(s.pubDate.slice(0, 4)) - 5) { log('rejected: data too old', brief.data_period); state.used_research.push(s.id); continue; }
+      // independent fact-check pass
+      let review;
+      try { review = await reviewBrief(s, brief, process.env.GEMINI_API_KEY); }
+      catch (e) { log('review error:', e.message); continue; }
+      if (!review.pass) { log('fact-check failed:', review.issues.join(' | ')); continue; }
       const no = pad2(state.research_no + 1);
       const [y, m] = s.pubDate.split('-');
       const monthYear = `${MONTHS[+m - 1]} ${y}`;
-      const sourceShort = `${s.firstAuthor} et al., ${s.journal} · ${monthYear}`;
+      const dataNote = /not stated/i.test(brief.data_period) ? '' : ` · data ${brief.data_period}`;
+      const sourceShort = `${s.firstAuthor} et al., ${s.journal} · ${monthYear}${dataNote}`;
       const file = `images/${today}-research-brief-${no}.png`;
       const r = await renderPng('research', brief, { no, year: y, sourceShort }, path.join(ROOT, file));
       if (r.overflow) { log('layout overflow, trying next study'); continue; }

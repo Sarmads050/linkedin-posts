@@ -15,6 +15,8 @@ const SCHEMA = {
       items: { type: 'OBJECT', properties: { label: { type: 'STRING', description: 'max 6 words' }, sub: { type: 'STRING', description: 'max 6 words context' }, value: { type: 'NUMBER' } }, required: ['label', 'value'] },
     },
     facts: { type: 'ARRAY', description: '0-3 other short facts with a number', items: { type: 'OBJECT', properties: { value: { type: 'STRING' }, label: { type: 'STRING', description: 'max 8 words' } }, required: ['value', 'label'] } },
+    data_period: { type: 'STRING', description: 'When the data were collected, exactly as stated in the abstract (e.g. "2024-25"). "not stated" if the abstract does not say.' },
+    scope: { type: 'STRING', description: 'Where the study was done, exactly as in the abstract, e.g. "4 provinces of Pakistan" or "2 districts of Sindh". Never widen it.' },
     design: { type: 'STRING', description: 'One line: study design, sample size and setting, e.g. "Cross-sectional survey of 2,400 women in 3 districts of Sindh"' },
     limitation: { type: 'STRING', description: 'One honest limitation in max 25 words' },
     why: { type: 'STRING', description: 'Why it matters for primary health care in Pakistan, max 25 words' },
@@ -22,7 +24,7 @@ const SCHEMA = {
     hashtags: { type: 'ARRAY', items: { type: 'STRING' }, description: '4-5 hashtags without #' },
     alt: { type: 'STRING', description: 'Alt text describing the infographic numbers' },
   },
-  required: ['relevant', 'headline_plain', 'headline_accent', 'topic', 'big_value', 'big_label', 'bars', 'facts', 'design', 'limitation', 'why', 'caption', 'hashtags', 'alt'],
+  required: ['relevant', 'data_period', 'scope', 'headline_plain', 'headline_accent', 'topic', 'big_value', 'big_label', 'bars', 'facts', 'design', 'limitation', 'why', 'caption', 'hashtags', 'alt'],
 };
 
 const RULES = `You write LinkedIn research briefs for Sarmad Ali, an MIS & data professional in a maternal and child nutrition programme (primary health care) in Sindh, Pakistan.
@@ -31,10 +33,13 @@ Rules:
 - Do not use any number that is not in the abstract (no "first 1,000 days", no other statistics).
 - Do not claim causation if the design is observational. Mention the real study design.
 - Do not say Sarmad was involved in the study. Write in a natural, human, professional voice.
+- Attach every number to exactly the group, outcome and place it belongs to in the abstract. Do not mix groups.
+- Never widen the scope: a study in 2 districts is not "Pakistan"; say where it was done.
+- Use "associated with" for observational studies. Use "reduced/caused" only for randomised trials.
+- Professional British/International English, no spelling or grammar mistakes, no hype words like "shocking" or "game-changer".
 - If the study is not mainly about Pakistan or not related to primary health care, set relevant=false.`;
 
-export async function briefFromAbstract(study, apiKey) {
-  const prompt = `${RULES}\n\nTitle: ${study.title}\nJournal: ${study.journal} (${study.pubDate})\nAbstract: ${study.abstract}`;
+async function callGemini(prompt, schema, apiKey, temperature = 0.3) {
   let lastErr;
   for (const model of MODELS) {
     try {
@@ -43,7 +48,7 @@ export async function briefFromAbstract(study, apiKey) {
         headers: { 'Content-Type': 'application/json', 'x-goog-api-key': apiKey },
         body: JSON.stringify({
           contents: [{ role: 'user', parts: [{ text: prompt }] }],
-          generationConfig: { temperature: 0.3, responseMimeType: 'application/json', responseSchema: SCHEMA },
+          generationConfig: { temperature, responseMimeType: 'application/json', responseSchema: schema },
         }),
       });
       if (!res.ok) { lastErr = new Error(`Gemini ${model} ${res.status}: ${(await res.text()).slice(0, 200)}`); continue; }
@@ -53,4 +58,41 @@ export async function briefFromAbstract(study, apiKey) {
     } catch (e) { lastErr = e; }
   }
   throw lastErr || new Error('Gemini failed');
+}
+
+export function briefFromAbstract(study, apiKey) {
+  const prompt = `${RULES}\n\nTitle: ${study.title}\nJournal: ${study.journal} (${study.pubDate})\nAbstract: ${study.abstract}`;
+  return callGemini(prompt, SCHEMA, apiKey, 0.3);
+}
+
+const REVIEW_SCHEMA = {
+  type: 'OBJECT',
+  properties: {
+    pass: { type: 'BOOLEAN', description: 'true only if there is no factual, numerical, scope, causal-language or language error at all' },
+    issues: { type: 'ARRAY', items: { type: 'STRING' }, description: 'Every problem found, each one specific. Empty if pass.' },
+  },
+  required: ['pass', 'issues'],
+};
+
+// Independent second pass: a strict fact-checker reads the draft against the abstract.
+export function reviewBrief(study, brief, apiKey) {
+  const prompt = `You are a strict senior public-health editor fact-checking a LinkedIn post before it is published to an audience of health professionals, researchers and managers in Pakistan. A single error damages the author's credibility, so be demanding.
+
+Check the DRAFT against the ABSTRACT and fail it (pass=false) if ANY of these is true:
+1. Any number is missing from the abstract, altered, rounded, or attached to the wrong group, outcome, year or place.
+2. Any claim is not supported by the abstract, or overstates it.
+3. Causal wording ("reduced", "led to", "caused", "because of") is used for a non-randomised study.
+4. The scope is widened (e.g. district or facility results presented as national).
+5. The headline or big number would mislead someone who reads only the image.
+6. The limitation is missing, wrong or trivial.
+7. Any spelling, grammar or awkward English that a professional would notice.
+8. The data are old (collected more than 5 years before publication) and this is not made clear.
+9. The study is not really about primary health care in Pakistan.
+
+ABSTRACT (title: ${study.title}; journal: ${study.journal}; published ${study.pubDate}):
+${study.abstract}
+
+DRAFT (JSON):
+${JSON.stringify(brief, null, 2)}`;
+  return callGemini(prompt, REVIEW_SCHEMA, apiKey, 0);
 }

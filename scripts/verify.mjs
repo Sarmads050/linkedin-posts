@@ -11,7 +11,7 @@ export function verifyBrief(brief, abstract) {
   // harmless numbers: years, small list counts
   for (let y = 2000; y <= 2030; y++) allowed.add(String(y));
   for (let i = 1; i <= 5; i++) allowed.add(String(i));
-  const fields = [brief.headline_plain, brief.big_value, brief.big_label, brief.design, brief.limitation, brief.why, brief.caption,
+  const fields = [brief.data_period, brief.scope, brief.headline_plain, brief.big_value, brief.big_label, brief.design, brief.limitation, brief.why, brief.caption,
     ...(brief.bars || []).flatMap(b => [b.label, b.sub, String(b.value)]),
     ...(brief.facts || []).flatMap(f => [f.value, f.label])];
   const bad = [];
