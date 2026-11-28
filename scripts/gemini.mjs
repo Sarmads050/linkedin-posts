@@ -47,14 +47,21 @@ const toJsonSchema = n => {
   return o;
 };
 
-// Free fallback: GitHub Models, using the workflow's own GITHUB_TOKEN (no extra key needed).
-async function callGitHubModels(prompt, schema, temperature) {
-  const token = process.env.GITHUB_TOKEN;
-  if (!token) throw new Error('no GITHUB_TOKEN for GitHub Models');
-  const model = process.env.GH_MODEL || 'openai/gpt-4.1-mini';
-  const res = await fetch('https://models.github.ai/inference/chat/completions', {
+// OpenAI-compatible chat providers (Groq free tier, GitHub Models).
+async function callGitHubModels(prompt, schema, temperature) { return callChat('GitHub Models', 'https://models.github.ai/inference/chat/completions', process.env.GITHUB_TOKEN, process.env.GH_MODEL || 'openai/gpt-4.1-mini', prompt, schema, temperature); }
+async function callGroq(prompt, schema, temperature) {
+  let err;
+  for (const model of [process.env.GROQ_MODEL, 'llama-3.3-70b-versatile', 'openai/gpt-oss-120b'].filter(Boolean)) {
+    try { return await callChat('Groq', 'https://api.groq.com/openai/v1/chat/completions', process.env.GROQ_API_KEY, model, prompt, schema, temperature); }
+    catch (e) { err = e; }
+  }
+  throw err;
+}
+async function callChat(name, url, token, model, prompt, schema, temperature) {
+  if (!token) throw new Error(`no key for ${name}`);
+  const res = await fetch(url, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', Accept: 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28', Authorization: `Bearer ${token}` },
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}`, ...(name === 'GitHub Models' ? { Accept: 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28' } : {}) },
     body: JSON.stringify({
       model, temperature,
       messages: [
@@ -65,16 +72,17 @@ async function callGitHubModels(prompt, schema, temperature) {
     }),
   });
   const body = await res.text();
-  if (!res.ok) throw new Error(`GitHub Models ${res.status}: ${body.slice(0, 200)}`);
-  let j; try { j = JSON.parse(body); } catch { throw new Error(`GitHub Models non-JSON reply (status ${res.status}, type ${res.headers.get('content-type')}, url ${res.url}): ${JSON.stringify(body.slice(0, 300))}`); }
+  if (!res.ok) throw new Error(`${name} ${res.status}: ${body.slice(0, 200)}`);
+  let j; try { j = JSON.parse(body); } catch { throw new Error(`${name} non-JSON reply (status ${res.status}, type ${res.headers.get('content-type')}, url ${res.url}): ${JSON.stringify(body.slice(0, 300))}`); }
   const out = JSON.parse(j.choices?.[0]?.message?.content || '{}');
-  for (const k of schema.required || []) if (!(k in out)) throw new Error(`GitHub Models answer missing "${k}"`);
+  for (const k of schema.required || []) if (!(k in out)) throw new Error(`${name} answer missing "${k}"`);
   return out;
 }
 
 async function callGemini(prompt, schema, apiKey, temperature = 0.3) {
   let lastErr;
-  if (!apiKey) return callGitHubModels(prompt, schema, temperature);
+  if (process.env.GROQ_API_KEY) { try { return await callGroq(prompt, schema, temperature); } catch (e) { lastErr = e; } }
+  if (!apiKey) { if (lastErr) throw lastErr; return callGitHubModels(prompt, schema, temperature); }
   for (const model of MODELS) {
     try {
       const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
@@ -91,7 +99,7 @@ async function callGemini(prompt, schema, apiKey, temperature = 0.3) {
       return JSON.parse(txt);
     } catch (e) { lastErr = e; }
   }
-  // Gemini unavailable (no credits, quota, key problem): use the free GitHub Models fallback
+  // Gemini unavailable (no credits, quota, key problem): try the GitHub Models fallback
   try { return await callGitHubModels(prompt, schema, temperature); }
   catch (e) { throw new Error(`${lastErr ? lastErr.message : 'Gemini failed'} | fallback: ${e.message}`); }
 }
