@@ -37,16 +37,19 @@ if (kind === 'research') {
     const since = new Date(pk.getTime() - 180 * 86400000).toISOString().slice(0, 10);
     const cands = await findCandidates({ used: state.used_research, fromDate: since > '2026-01-01' ? since : '2026-01-01' });
     log(`${cands.length} candidate studies`);
-    for (const s of cands.slice(0, 3)) { // at most 3 studies per day
+    for (const [ci, s] of cands.slice(0, 5).entries()) { // at most 5 studies per day
+      if (ci) await new Promise(r => setTimeout(r, 20000)); // stay under free-tier rate limits
       log(`trying ${s.id}: ${s.title.slice(0, 90)}`);
       let brief;
       try { brief = await briefFromAbstract(s, process.env.GEMINI_API_KEY); }
       catch (e) { log('gemini error:', e.message); if (/40[0-4]|depleted|not valid/.test(e.message) && !/Gemini [^ ]+: Unexpected|JSON/.test(e.message)) { log('AI provider problem, stopping research for today'); break; } continue; }
+      const fixAccent = b => { if (b && b.headline_plain && !b.headline_plain.includes(b.headline_accent || '\u0000')) b.headline_accent = b.headline_plain.split(' ').slice(-2).join(' '); return b; };
+      fixAccent(brief);
       let v = verifyBrief(brief, s.abstract);
       if (!v.ok && brief.relevant) {
         // one repair attempt: tell the model exactly what failed
         log('draft failed checks, asking for a corrected draft:', v.problems.join('; '));
-        try { brief = await briefFromAbstract(s, process.env.GEMINI_API_KEY, v.problems.join('; ')); v = verifyBrief(brief, s.abstract); }
+        try { await new Promise(r => setTimeout(r, 15000)); brief = fixAccent(await briefFromAbstract(s, process.env.GEMINI_API_KEY, v.problems.join('; '))); v = verifyBrief(brief, s.abstract); }
         catch (e) { log('repair error:', e.message.slice(0, 200)); }
       }
       if (!v.ok) {
@@ -59,6 +62,7 @@ if (kind === 'research') {
       if (dataYears.length && Math.max(...dataYears) < Number(s.pubDate.slice(0, 4)) - 5) { log('rejected: data too old', brief.data_period); state.used_research.push(s.id); continue; }
       // independent fact-check pass
       let review;
+      await new Promise(r => setTimeout(r, 15000));
       try { review = await reviewBrief(s, brief, process.env.GEMINI_API_KEY); }
       catch (e) { log('review error:', e.message); continue; }
       if (!review.pass) { log('fact-check failed:', review.issues.join(' | ')); continue; }

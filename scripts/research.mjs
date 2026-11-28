@@ -11,7 +11,7 @@ const TOPICS = [
 export async function findCandidates({ fromDate = '2026-01-01', used = [], max = 25 } = {}) {
   const topic = TOPICS.map(t => `ABSTRACT:${t}`).join(' OR ');
   const query = `(TITLE:"Pakistan" OR ABSTRACT:"Pakistan") AND (${topic}) AND FIRST_PDATE:[${fromDate} TO 2100-12-31] AND HAS_ABSTRACT:y AND SRC:MED`;
-  const url = `${EPMC}?${new URLSearchParams({ query, format: 'json', pageSize: '60', resultType: 'core', sort: 'FIRST_PDATE_D desc' })}`;
+  const url = `${EPMC}?${new URLSearchParams({ query, format: 'json', pageSize: '100', resultType: 'core', sort: 'FIRST_PDATE_D desc' })}`;
   const res = await fetch(url);
   if (!res.ok) throw new Error(`Europe PMC ${res.status}`);
   const data = await res.json();
@@ -43,8 +43,9 @@ export async function findCandidates({ fromDate = '2026-01-01', used = [], max =
     });
     if (out.length >= max) break;
   }
-  // prefer studies closest to primary health care, then newest
-  const KEY = /primary health|primary care|lady health|community health|basic health unit|antenatal|immuni[sz]|vaccin|stunting|wasting|malnutrition|maternal|newborn|neonatal|family planning|health facilit|DHIS|information system/gi;
-  const score = s => ((s.title + ' ' + s.abstract).match(KEY) || []).length;
-  return out.map((s, i) => ({ s, k: score(s), i })).sort((a, b) => (b.k > 2) - (a.k > 2) || a.i - b.i).map(x => x.s);
+  // keep only studies with real primary-health-care content, strongest first, then newest
+  const CORE = /primary health ?care|primary care|lady health worker|community health worker|basic health unit|rural health cent|antenatal|prenatal|postnatal|skilled birth|immuni[sz]ation|vaccination|zero-dose|stunting|wasting|malnutrition|family planning|contracepti|health facilit|DHIS|health information system|HMIS|essential package|universal health coverage|maternal health service|cash transfer|nutrition programme|nutrition program/gi;
+  const HOSPITAL = /tertiary|teaching hospital|intensive care|NICU|ICU|surgical|surgery|screening for congenital/i;
+  const score = s => { const t = s.title + ' ' + s.abstract; return (t.match(CORE) || []).length - (HOSPITAL.test(t) ? 3 : 0); };
+  return out.map((s, i) => ({ s, k: score(s), i })).filter(x => x.k >= 2).sort((a, b) => b.k - a.k || a.i - b.i).map(x => x.s);
 }
